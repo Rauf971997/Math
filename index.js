@@ -3,10 +3,10 @@ function getPrototype(obj){
     while(obj!==null){
         let proto=Object.getPrototypeOf(obj);
         prototypes.push(proto);
-        obj=proto
+        obj=proto;
     }
 
-    return prototypes
+    return prototypes;
 }
 
 
