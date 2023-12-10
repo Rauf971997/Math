@@ -2,26 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Table and Buttons</title>
     <script src="index.js" defer></script>
-    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <ul class="socialLinks">
-        <li><a href="https://www.instagram.com/" class="link-item">Instagram</a></li>
-        <li><a href="https://www.facebook.com/" class="link-item">Facebook</a></li>
-        <li><a href="https://twitter.com/" class="link-item">Twitter</a></li>
-        <li><a href="https://www.instagram.com/" class="link-item">Instagram</a></li>
-        <li><a href="https://www.facebook.com/" class="link-item">Facebook</a></li>
-        <li><a href="https://mail.ru/" class="link-item">Mail.ru</a></li>
-        <li><a href="https://www.instagram.com/" class="link-item">Instagram</a></li>
-        <li><a href="https://www.facebook.com/" class="link-item">Facebook</a></li>
-        <li><a href="https://twitter.com/" class="link-item">Twitter</a></li>
-        <li><a href="https://www.facebook.com/" class="link-item">Facebook</a></li>
-    </ul>
-
-    <button ><span>Click me</span> for show message</button>
+    <table id="myTable" border="1">
+        <tr>
+          <td>Ячейка</td>
+        </tr>
+    </table>
+      
+      <button id="addRowBtn">+ Добавить строку в конец</button>
+      <button id="addColumnBtn">+ Добавить столбец в конец</button>
+      <button id="deleteRowBtn">- Удалить строку с конца</button>
+      <button id="deleteColumnBtn">- Удалить столбец с конца</button>
 </body>
 </html>
