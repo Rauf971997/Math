@@ -1,39 +1,21 @@
+const mainPhoto = document.querySelector('#main-photo');
+const previews = document.querySelectorAll('.preview img');
 
-  const addRowBtn = document.querySelector("#addRowBtn");
-  const addColumnBtn = document.querySelector("#addColumnBtn");
-  const deleteRowBtn = document.querySelector("#deleteRowBtn");
-  const deleteColumnBtn = document.querySelector("#deleteColumnBtn");
-  const myTable = document.querySelector("#myTable");
 
-  addRowBtn.addEventListener("click", function () {
-    const row = myTable.insertRow(-1);
-    const cell = row.insertCell(0);
-    cell.innerHTML = "Новая ячейка";
+previews.forEach(function(preview) {
+    preview.addEventListener('click', function() {
+        mainPhoto.src = preview.src;
+    })
+})
+
+
+const previewItems = document.querySelectorAll('.preview ul li');
+previewItems.forEach(function(item) {
+  item.addEventListener('mouseover', function() {
+    this.style.outline = '2px solid black'; 
   });
 
-  addColumnBtn.addEventListener("click", function () {
-    for (let i = 0; i < myTable.rows.length; i++) {
-      const cell = myTable.rows[i].insertCell(-1);
-      cell.innerHTML = "Новая ячейка";
-    }
+  item.addEventListener('mouseout', function() {
+    this.style.outline = 'none'; 
   });
-
-  deleteRowBtn.addEventListener("click", function () {
-    const lastRowIndex = myTable.rows.length - 1;
-    if (lastRowIndex >= 1) {
-      myTable.deleteRow(lastRowIndex);
-    } else {
-      alert("Нельзя удалить последнюю строку!");
-    }
-  });
-
-  deleteColumnBtn.addEventListener("click", function () {
-    const lastCellIndex = myTable.rows[0].cells.length - 1;
-    if (lastCellIndex >= 1) {
-      for (let i = 0; i < myTable.rows.length; i++) {
-        myTable.rows[i].deleteCell(lastCellIndex);
-      }
-    } else {
-      alert("Нельзя удалить последний столбец!");
-    }
-  });
+});
