@@ -1,81 +1,167 @@
-// Задание первое начало 
-// const regExp = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+let canvas = document.querySelector("canvas");
+let ctx = canvas.getContext("2d");
+let ballRadius = 10;
+let x = canvas.width/2;
+let y = canvas.height-30;
+let dx = 2;
+let dy = -2;
+let paddleHeight = 10;
+let paddleWidth = 75;
+let paddleX = (canvas.width-paddleWidth)/2;
+let rightPressed = false;
+let leftPressed = false;
+let brickRowCount = 5;
+let brickColumnCount = 3;
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
+let score = 0;
+let lives = 3;
 
-// const test1=regExp.test('23:00');
-// const test2=regExp.test('23:59');
-// const test3=regExp.test('24:00');
-// const test4=regExp.test('23:60');
+let bricks = [];
+for(let c=0; c<brickColumnCount; c++) {
+  bricks[c] = [];
+  for(let r=0; r<brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
+  }
+}
 
-// console.table([
-//     test1,
-//     test2,
-//     test3,
-//     test4,
-// ])
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
-// Задание первое конец
+function keyDownHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = true;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = true;
+    }
+}
 
+function keyUpHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = false;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = false;
+    }
+}
 
-// Задание второе начало
-// const regExp = /^\(\+994\)[ -]?(55|77|50|99|51|70)[ -]?\d{3}[ -]?\d{2}[ -]?\d{2}$/;
+function mouseMoveHandler(e) {
+  let relativeX = e.clientX - canvas.offsetLeft;
+  if(relativeX > 0 && relativeX < canvas.width) {
+    paddleX = relativeX - paddleWidth/2;
+  }
+}
+function collisionDetection() {
+  for(let c=0; c<brickColumnCount; c++) {
+    for(let r=0; r<brickRowCount; r++) {
+      let b = bricks[c][r];
+      if(b.status == 1) {
+        if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+          dy = -dy;
+          b.status = 0;
+          score++;
+          if(score == brickRowCount*brickColumnCount) {
+            alert("YOU WIN, CONGRATS!");
+            document.location.reload();
+          }
+        }
+      }
+    }
+  }
+}
 
-// const test1 = '(+994) 55 799 88 09';
-// const test2 = '+994997771071';
-// const test3='(+994)99-777-09-89'
+function drawBall() {
+  ctx.beginPath();
+  ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
+  ctx.closePath();
+}
+function drawPaddle() {
+  ctx.beginPath();
+  ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
+  ctx.closePath();
+}
+function drawBricks() {
+  for(let c=0; c<brickColumnCount; c++) {
+    for(let r=0; r<brickRowCount; r++) {
+      if(bricks[c][r].status == 1) {
+        let brickX = (r*(brickWidth+brickPadding))+brickOffsetLeft;
+        let brickY = (c*(brickHeight+brickPadding))+brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+  }
+}
+function drawScore() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: "+score, 8, 20);
+}
+function drawLives() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+}
 
-// const result1 = regExp.test(test1);
-// const result2 = regExp.test(test2);
-// const result3=regExp.test(test3)
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBricks();
+  drawBall();
+  drawPaddle();
+  drawScore();
+  drawLives();
+  collisionDetection();
 
-// console.table([
-//    result1,
-//    result2,
-//    result3
-// ])
-// Задание второе конец
+  if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+    dx = -dx;
+  }
+  if(y + dy < ballRadius) {
+    dy = -dy;
+  }
+  else if(y + dy > canvas.height-ballRadius) {
+    if(x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy;
+    }
+    else {
+      lives--;
+      if(!lives) {
+        alert("GAME OVER");
+        document.location.reload();
+      }
+      else {
+        x = canvas.width/2;
+        y = canvas.height-30;
+        dx = 3;
+        dy = -3;
+        paddleX = (canvas.width-paddleWidth)/2;
+      }
+    }
+  }
 
+  if(rightPressed && paddleX < canvas.width-paddleWidth) {
+    paddleX += 7;
+  }
+  else if(leftPressed && paddleX > 0) {
+    paddleX -= 7;
+  }
 
+  x += dx;
+  y += dy;
+  requestAnimationFrame(draw);
+}
 
-// 3ое задание начало
-// const input=document.querySelector('input');
-
-// input.addEventListener('input', function() {
-//     const password = this.value;
-//     const isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&_])(?=.*[0-9])(?=.*[!?.,])[A-Za-z0-9@#$%&!?.,]{8,16}$/.test(password);
-//     console.log(isValidPassword); 
-//   });
-
-//   3-е задание конец
-
-
-
-// 4ое задание начало
-// const str = "Rauf123 group233";
-// const stringReplace = str.replace(/\d/g, 'D');
-
-// console.log(stringReplace); 
-// 4ое задание конец
-
-
-
-
-// 5-ое задание начало
-
-// const str = "Rauf123 group233 100 10";
-// const stringReplace = str.replace(/[0-9]+/g, 'N');
-
-// console.log(stringReplace); 
-
-// 5 ое задание конец
-
-
-
-
-// 6-ое задание начало 
-
-const strSpace = "Rauf      group      number      location";
-const wordsCount = strSpace.split(/\s+/).filter(word => word !== '').length;
-
-console.log(wordsCount); 
-
-// 6-ое задание конец
+draw();
